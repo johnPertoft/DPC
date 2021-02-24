@@ -58,18 +58,18 @@ class Kinetics400_full_3d(data.Dataset):
         # splits
         if big:
             if mode == 'train':
-                split = '../process_data/data/kinetics400_256/train_split.csv'
+                split = '../data/kinetics400_256/train_split.csv'
                 video_info = pd.read_csv(split, header=None)
             elif (mode == 'val') or (mode == 'test'):
-                split = '../process_data/data/kinetics400_256/val_split.csv'
+                split = '../data/kinetics400_256/val_split.csv'
                 video_info = pd.read_csv(split, header=None)
             else: raise ValueError('wrong mode')
         else: # small
             if mode == 'train':
-                split = '../process_data/data/kinetics400/train_split.csv'
+                split = '../data/kinetics400/train_split.csv'
                 video_info = pd.read_csv(split, header=None)
             elif (mode == 'val') or (mode == 'test'):
-                split = '../process_data/data/kinetics400/val_split.csv'
+                split = '../data/kinetics400/val_split.csv'
                 video_info = pd.read_csv(split, header=None)
             else: raise ValueError('wrong mode')
 
@@ -156,17 +156,17 @@ class UCF101_3d(data.Dataset):
 
         # splits
         if mode == 'train':
-            split = '../process_data/data/ucf101/train_split%02d.csv' % self.which_split
+            split = '../data/UCF-101/train_split%02d.csv' % self.which_split
             video_info = pd.read_csv(split, header=None)
         elif (mode == 'val') or (mode == 'test'): # use val for test
-            split = '../process_data/data/ucf101/test_split%02d.csv' % self.which_split 
+            split = '../data/UCF-101/test_split%02d.csv' % self.which_split 
             video_info = pd.read_csv(split, header=None)
         else: raise ValueError('wrong mode')
 
         # get action list
         self.action_dict_encode = {}
         self.action_dict_decode = {}
-        action_file = os.path.join('../process_data/data/ucf101', 'classInd.txt')
+        action_file = os.path.join('../data/UCF-101/splits_classification', 'classInd.txt')
         action_df = pd.read_csv(action_file, sep=' ', header=None)
         for _, row in action_df.iterrows():
             act_id, act_name = row

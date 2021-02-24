@@ -39,7 +39,7 @@ parser.add_argument('--resume', default='', type=str, help='path of model to res
 parser.add_argument('--pretrain', default='', type=str, help='path of pretrained model')
 parser.add_argument('--epochs', default=10, type=int, help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, help='manual epoch number (useful on restarts)')
-parser.add_argument('--gpu', default='0,1', type=str)
+parser.add_argument('--gpu', default='0', type=str)
 parser.add_argument('--print_freq', default=5, type=int, help='frequency of printing output during training')
 parser.add_argument('--reset_lr', action='store_true', help='Reset learning rate when resume training?')
 parser.add_argument('--prefix', default='tmp', type=str, help='prefix of checkpoint filename')
@@ -210,9 +210,9 @@ def train(data_loader, model, optimizer, epoch):
 
         # score is a 6d tensor: [B, P, SQ, B2, N, SQ]
         # similarity matrix is computed inside each gpu, thus here B == num_gpu * B2
-        score_flattened = score_.view(B*NP*SQ, B2*NS*SQ)
-        target_flattened = target_.view(B*NP*SQ, B2*NS*SQ)
-        target_flattened = target_flattened.argmax(dim=1)
+        score_flattened = score_.contiguous().view(B*NP*SQ, B2*NS*SQ)
+        target_flattened = target_.contiguous().view(B*NP*SQ, B2*NS*SQ)
+        target_flattened = target_flattened.double().argmax(dim=1)
 
         loss = criterion(score_flattened, target_flattened)
         top1, top3, top5 = calc_topk_accuracy(score_flattened, target_flattened, (1,3,5))
@@ -262,9 +262,9 @@ def validate(data_loader, model, epoch):
             if idx == 0: target_, (_, B2, NS, NP, SQ) = process_output(mask_)
 
             # [B, P, SQ, B, N, SQ]
-            score_flattened = score_.view(B*NP*SQ, B2*NS*SQ)
-            target_flattened = target_.view(B*NP*SQ, B2*NS*SQ)
-            target_flattened = target_flattened.argmax(dim=1)
+            score_flattened = score_.contiguous().view(B*NP*SQ, B2*NS*SQ)
+            target_flattened = target_.contiguous().view(B*NP*SQ, B2*NS*SQ)
+            target_flattened = target_flattened.double().argmax(dim=1)
 
             loss = criterion(score_flattened, target_flattened)
             top1, top3, top5 = calc_topk_accuracy(score_flattened, target_flattened, (1,3,5))
@@ -308,7 +308,7 @@ def get_data(transform, mode='train'):
                                       batch_size=args.batch_size,
                                       sampler=sampler,
                                       shuffle=False,
-                                      num_workers=32,
+                                      num_workers=8,
                                       pin_memory=True,
                                       drop_last=True)
     elif mode == 'val':
@@ -316,7 +316,7 @@ def get_data(transform, mode='train'):
                                       batch_size=args.batch_size,
                                       sampler=sampler,
                                       shuffle=False,
-                                      num_workers=32,
+                                      num_workers=8,
                                       pin_memory=True,
                                       drop_last=True)
     print('"%s" dataset size: %d' % (mode, len(dataset)))

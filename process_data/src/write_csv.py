@@ -9,7 +9,7 @@ def write_list(data_list, path, ):
             if row: writer.writerow(row)
     print('split saved to %s' % path)
 
-def main_UCF101(f_root, splits_root, csv_root='../data/ucf101/'):
+def main_UCF101(f_root, splits_root, csv_root='../data/UCF-101/'):
     '''generate training/testing split, count number of available frames, save in csv'''
     if not os.path.exists(csv_root): os.makedirs(csv_root)
     for which_split in [1,2,3]:
@@ -95,8 +95,8 @@ if __name__ == '__main__':
     # f_root is the frame path
     # edit 'your_path' here: 
 
-    main_UCF101(f_root='your_path/UCF101/frame', 
-                splits_root='your_path/UCF101/splits_classification')
+    main_UCF101(f_root='../data/UCF-101/frame', 
+                splits_root='../data/UCF-101/splits_classification')
 
     # main_HMDB51(f_root='your_path/HMDB51/frame',
     #             splits_root='your_path/HMDB51/split/testTrainMulti_7030_splits')

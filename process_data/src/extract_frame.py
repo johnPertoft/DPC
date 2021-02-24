@@ -96,8 +96,8 @@ if __name__ == '__main__':
     # v_root is the video source path, f_root is where to store frames
     # edit 'your_path' here: 
     
-    main_UCF101(v_root='your_path/UCF101/videos',
-                f_root='your_path/UCF101/frame')
+    main_UCF101(v_root='../data/UCF-101/videos',
+                f_root='../data/UCF-101/frame')
 
     # main_HMDB51(v_root='your_path/HMDB51/videos',
     #             f_root='your_path/HMDB51/frame')
