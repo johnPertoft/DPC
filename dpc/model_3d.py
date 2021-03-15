@@ -33,6 +33,7 @@ class DPC_RNN(nn.Module):
                                hidden_size=self.param['hidden_size'],
                                kernel_size=1,
                                num_layers=self.param['num_layers'])
+        self.observed_hidden = nn.Identity()
         self.network_pred = nn.Sequential(
                                 nn.Conv2d(self.param['feature_size'], self.param['feature_size'], kernel_size=1, padding=0),
                                 nn.ReLU(inplace=True),
@@ -61,6 +62,7 @@ class DPC_RNN(nn.Module):
         ### aggregate, predict future ###
         _, hidden = self.agg(feature[:, 0:N-self.pred_step, :].contiguous())
         hidden = hidden[:,-1,:] # after tanh, (-1,1). get the hidden state of last layer, last time step
+        hidden = self.observed_hidden(hidden)
         
         pred = []
         for i in range(self.pred_step):

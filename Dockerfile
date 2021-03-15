@@ -7,4 +7,6 @@ RUN pip install \
     matplotlib \
     opencv-python \
     pandas \
+    scipy \
+    streamlit \
     tensorboardx

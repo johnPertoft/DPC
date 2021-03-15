@@ -14,3 +14,5 @@ unzip ucf101-splits.zip
 
 mkdir videos && mv UCF-101/* videos && mv videos UCF-101/
 mv ucfTrainTestlist UCF-101/splits_classification
+
+# Then follow instructions in readme.
